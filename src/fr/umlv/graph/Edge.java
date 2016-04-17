@@ -1,5 +1,5 @@
 package fr.umlv.graph;
-
+/*J'aime les gros cacas*/
 public class Edge {
   final int from;
   final int to;
