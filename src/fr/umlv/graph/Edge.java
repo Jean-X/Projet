@@ -1,5 +1,4 @@
 package fr.umlv.graph;
-/*J'aime les gros cacas*/
 public class Edge {
   final int from;
   final int to;
@@ -28,7 +27,8 @@ public class Edge {
   public void setUsed(int used) {
     this.used = used;
   }
-
+/*Si l'origine est celle demandée, on renvoie la destination
+ * Sinon on renvoie l'origine			*/
   public int other(int v) {
     return (from == v)? to: from;
   }
