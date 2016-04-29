@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class SeamCarving {
   
+	@SuppressWarnings("resource")
 	public static int[][] readpgm(Path path) throws IOException {
     
 		try(BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
@@ -39,7 +40,7 @@ public class SeamCarving {
 			return im;
 		}
 	}
-	
+	/* Jean, créer un fichier à partir d'un tableau 2D de "pixel" */
 	public static void writepgm(int[][] image, String filename){
 		File f = new File(filename);
 		try{
@@ -62,10 +63,9 @@ public class SeamCarving {
 		}
 	}
 	
-	
+	/*cree le tableau d'interet*/
 	public static int[][] interest (int [][] image){
 		int inter[][] = new int [image.length][image[0].length];
-		
 		for(int i = 0; i<inter.length; i++)
 			for(int j = 0; j<inter[i].length; j++){
 				if(j == 0)
@@ -77,6 +77,23 @@ public class SeamCarving {
 			}	
 		
 		return inter;
+	}
+	
+	
+	public static int[][] cutImage(int[][] imageOriginal, int[] indiceCoupe){
+		int[][] newImage = new int[imageOriginal.length][imageOriginal[0].length -1];
+		
+		for(int i = 0; i < imageOriginal.length; i++){
+			/*if(i < imageOriginal.length-1 && Math.abs(indiceCoupe[i]-indiceCoupe[i+1]) > 1)
+				System.out.println(indiceCoupe[i]+" "+ indiceCoupe[i+1]);*/
+			for(int j = 0, j2 = 0; j < imageOriginal[0].length; j++){
+				if (j != indiceCoupe[i]){
+					newImage[i][j2] = imageOriginal[i][j];
+					j2++;
+				}
+			}
+		}
+		return newImage;
 	}
 	
 }
