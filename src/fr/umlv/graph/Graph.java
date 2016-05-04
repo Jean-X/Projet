@@ -68,18 +68,17 @@ public class Graph {
   /* initialise le graphe au minimum*/
   public void initGraph(int itr[][]){
 	  Iterable<Edge> iterable = edges();
-	  int min;
+	  int min[] = new int [itr.length];
 	  for(int i = 0; i< itr.length; i++){
-		  min = itr[i][0];
-		  for(int j = 1; j<itr[0].length; j++){
-			  if(min > itr[i][j])
-				  min = itr[i][j];
-		  }
-		  for(Edge e : iterable){
-			  if(e.from >= itr[0].length * i && e.from <= itr[0].length * i + itr.length && e.capacity < 1000)
-				  e.setUsed(min);
+		  min[i] = itr[i][0];
+		  for(int j = 1; j<itr[0].length && min[i]!=0; j++){
+			  if(min[i] > itr[i][j])
+				  min[i] = itr[i][j];
 		  }
 	  }
+	  for(Edge e : iterable)
+		  if(e.capacity < 1000)
+			  e.setUsed(min[e.from/itr[0].length]);
   }
   
   /* A ameliorer, renvoie la différence entre la capaciter et l'utiliser pour un pont*/
@@ -161,25 +160,57 @@ public class Graph {
 	  return pred;
   }
   
-  public boolean condition(int indiceCoupe[], int colonne, Edge e){
-	  if(e.from/colonne == 0)
-		  return true;
-	  if(indiceCoupe[e.from/colonne-1] == e.from%colonne)
-		  return true;
-	  if(indiceCoupe[e.from/colonne-1] == e.from%colonne - 1)
-		  return true;
-	  if(indiceCoupe[e.from/colonne-1] == e.from%colonne + 1)
-		  return true;
+  public boolean condition(int indice){
+	  if(indice < 0)
+		  return false;
+	  if(indice >= adjacenyList.size())
+		  return false;
+	  for(Edge e: adjacenyList.get(indice)){
+		  if(e.from == indice && e.capacity < 1000 && e.capacity == e.used)
+			 return true; 
+	  }
 	  return false;
   }
+ 
   
   /* crée ma coupe minimal en renvoyant les indices à surpimer */
   public int[] coupeMinimal(int ligne, int colonne){
+	  boolean marqueur[] = new boolean[ligne*colonne];
 	  int indiceCoupe[] = new int[ligne];
-	  for(Edge e: edges()){
-		  if(e.used == e.capacity ){
-			  indiceCoupe[e.from/colonne] = e.from%colonne;
-		  }
+	  int decalage[] = new int [ligne];
+	  int inc = 0;
+	  for(int i = 0; i< colonne && inc < ligne; i++){
+		  for(Edge e : adjacenyList.get(i))
+			  if(e.from == i && e.capacity == e.used){
+				  indiceCoupe[0] = i;
+				  inc = 1;
+				  decalage[inc] = 0;
+				  while(inc > 0 && inc < ligne){
+					  if(condition(i+inc*colonne + decalage[inc]) && !marqueur[i+inc*colonne + decalage[inc]]){
+						  marqueur[i+inc*colonne + decalage[inc]] = true;
+						  indiceCoupe[inc] = i + decalage[inc];
+						  inc++;
+						  if(inc<ligne)
+							  decalage[inc] = decalage[inc-1];
+					  }
+					  else if(condition(i+inc*colonne + decalage[inc] + 1) && !marqueur[i+inc*colonne + decalage[inc] + 1]){
+						  marqueur[i+inc*colonne + decalage[inc] + 1] = true;
+						  indiceCoupe[inc] = i + decalage[inc] + 1;
+						  inc++;
+						  if(inc<ligne)
+							  decalage[inc] = decalage[inc-1] + 1;
+					  }
+					  else if(condition(i+inc*colonne + decalage[inc] - 1) && !marqueur[i+inc*colonne + decalage[inc] - 1]){
+						  marqueur[i+inc*colonne + decalage[inc] - 1] = true;
+						  indiceCoupe[inc] = i + decalage[inc] - 1;
+						  inc++;
+						  if(inc<ligne)
+							  decalage[inc] = decalage[inc-1] - 1;
+					  }
+					  else 
+						  inc--;
+				  }
+			  }
 	  }
 	  return indiceCoupe;
   }

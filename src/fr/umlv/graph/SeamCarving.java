@@ -86,7 +86,7 @@ public class SeamCarving {
 		for(int i = 0; i < imageOriginal.length; i++){
 			/*if(i < imageOriginal.length-1 && Math.abs(indiceCoupe[i]-indiceCoupe[i+1]) > 1)
 				System.out.println(indiceCoupe[i]+" "+ indiceCoupe[i+1]);*/
-			for(int j = 0, j2 = 0; j < imageOriginal[0].length; j++){
+			for(int j = 0, j2 = 0; j < imageOriginal[0].length && j2 < newImage[0].length; j++){
 				if (j != indiceCoupe[i]){
 					newImage[i][j2] = imageOriginal[i][j];
 					j2++;

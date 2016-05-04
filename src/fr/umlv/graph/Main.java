@@ -8,13 +8,13 @@ import java.nio.file.Paths;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		int image[][] = SeamCarving.readpgm(Paths.get("ex2.pgm"));
+		int image[][] = SeamCarving.readpgm(Paths.get("ex3.pgm"));
 		int interest[][];
 		int imageCoupe[][] ;
 		int tabIndice[];
 		Graph graph ;
 		
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 50; i++){
 			interest = SeamCarving.interest(image);
 			graph = Graph.toGraph(interest);
 			graph.initGraph(interest);
